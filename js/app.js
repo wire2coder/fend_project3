@@ -79,7 +79,7 @@ Player.prototype.handleInput = function(key1) {
         this.y = this.y - this.speed
         
         if (this.y < -25) {
-            player.reset(); // player go back to 'starting position'
+            player.resetPosition(); // player go back to 'starting position'
         }
     } else if (key1 == 'down') {
         console.log(`${this.x} and ${this.y}`)
@@ -109,7 +109,7 @@ Player.prototype.handleInput = function(key1) {
 }
 
 // Player rest(), reset position of the 'Player' to the bottom center of the screen
-Player.prototype.reset = function() {
+Player.prototype.resetPosition = function() {
     this.x = 200; // 'browser' x position
     this.y = 300; // 'browser' y position
 }
@@ -120,7 +120,7 @@ Player.prototype.reset = function() {
 // Place the player object in a variable called player
 let allEnemies=[];
 let player = new Player(0,0,50) // putting little dude on the screen
-player.reset()
+resetGame();
 
 
 // This listens for key presses and sends the keys to your
@@ -136,3 +136,20 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+
+/**
+ * 
+ * My custom functions
+ * 
+ * */
+ 
+ function resetGame() {
+     player.resetPosition() // reset player's position
+     
+     // make new 'enemy' on the screen
+     allEnemies.push(
+         new Enemy(0, Math.random()*80, Math.random()*100),
+         new Enemy(0, 220, Math.random()*300) // speed, higher is faster
+        )
+ }

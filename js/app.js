@@ -1,5 +1,7 @@
 // https://youtu.be/XEVnMgYblGc?t=1286
+// https://www.youtube.com/watch?v=7PHhRrjgTDA
 // https://classroom.udacity.com/nanodegrees/nd001/parts/5b433748-71ae-488f-8eba-f102160cd17b/modules/794adb78-22bb-4a38-85cd-6fa148ebc28a/lessons/64d2cad8-b230-41da-ba90-5b74f33176cc/concepts/59a9fe1d-cab4-4256-8479-4550ce4f4cfd
+
 
 
 // Enemies our player must avoid
@@ -32,14 +34,42 @@ Enemy.prototype.update = function(dt) {
     this.checkCollision();
 };
 
+
+Enemy.prototype.checkCollision = function() {
+    // todo 6/4
+    
+    // let object1 = player;
+    // let object2 = 'this enemy'
+    let enemyWidth = 80
+    let enemyHeight = 60
+    
+    
+    if ( player.x < this.x + enemyWidth 
+        && player.x + enemyWidth > this.x 
+        && player.y < this.y + enemyHeight 
+        && enemyHeight + player.y > this.y) {
+        player.resetPlayerPosition();
+    };
+
+    /*
+    2D, collision detection, http://blog.sklambert.com/html5-canvas-game-2d-collision-detection/#d-collision-detection    
+    
+        if (object1.x < object2.x + object2.width
+        && object1.x + object1.width  > object2.x
+        && object1.y < object2.y + object2.height
+        && object1.y + object1.height > object2.y) 
+            {
+                // The objects are touching, reset player's position
+            } 
+    */
+    
+}
+
+
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
-
-Enemy.prototype.checkCollision = function() {
-    // todo 6/4
-}
 
 
 // Now write your own player class
@@ -67,23 +97,25 @@ Player.prototype.handleInput = function(key1) {
     console.log(key1)
     
     if (key1 == 'left') {
-        console.log(`${this.x} and ${this.y}`)
         // this.x = (this.x - this.speed) % 450 // mod %, prevents value to go above 450
-        this.x = (this.x - this.speed)
-    } else if (key1 == 'right') {
-        console.log(`${this.x} and ${this.y}`)
-        // this.x = (this.x + this.speed) % 450
-        this.x = (this.x + this.speed)
-    } else if (key1 == 'up') {
-        console.log(`${this.x} and ${this.y}`)
-        this.y = this.y - this.speed
+        this.x = this.x - 102
+        console.log(`x is ${this.x} and y is ${this.y}`)
         
-        if (this.y < -25) {
-            player.resetPosition(); // player go back to 'starting position'
-        }
+    } else if (key1 == 'right') {
+        // this.x = (this.x + this.speed) % 450
+        this.x = this.x + 102
+        console.log(`x is ${this.x} and y is ${this.y}`)
+        
+    } else if (key1 == 'up') {
+        this.y = this.y - 83
+        console.log(`x is ${this.x} and y is ${this.y}`)
+        
+        // if (this.y < -25) {
+            // player.resetPlayerPosition(); // player go back to 'starting position'
+        // }
     } else if (key1 == 'down') {
-        console.log(`${this.x} and ${this.y}`)
-        this.y = this.y + this.speed
+        this.y = this.y + 83
+        console.log(`x is ${this.x} and y is ${this.y}`)
     }
     
     // 'canvas' size is x=505 y=606
@@ -109,9 +141,9 @@ Player.prototype.handleInput = function(key1) {
 }
 
 // Player rest(), reset position of the 'Player' to the bottom center of the screen
-Player.prototype.resetPosition = function() {
-    this.x = 200; // 'browser' x position
-    this.y = 300; // 'browser' y position
+Player.prototype.resetPlayerPosition = function() {
+    this.x = 202; // 'browser' x position
+    this.y = 405; // 'browser' y position
 }
 
 
@@ -145,11 +177,11 @@ document.addEventListener('keyup', function(e) {
  * */
  
  function resetGame() {
-     player.resetPosition() // reset player's position
+     player.resetPlayerPosition() // reset player's position
      
      // make new 'enemy' on the screen
      allEnemies.push(
-         new Enemy(0, Math.random()*80, Math.random()*100),
-         new Enemy(0, 220, Math.random()*300) // speed, higher is faster
+         new Enemy(0, 63, Math.random()*200),
+         new Enemy(0, 147, Math.random()*300) // speed, higher is faster
         )
  }

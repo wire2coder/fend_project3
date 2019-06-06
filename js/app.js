@@ -1,11 +1,5 @@
-// https://youtu.be/XEVnMgYblGc?t=1286
-// https://www.youtube.com/watch?v=7PHhRrjgTDA
-// https://classroom.udacity.com/nanodegrees/nd001/parts/5b433748-71ae-488f-8eba-f102160cd17b/modules/794adb78-22bb-4a38-85cd-6fa148ebc28a/lessons/64d2cad8-b230-41da-ba90-5b74f33176cc/concepts/59a9fe1d-cab4-4256-8479-4550ce4f4cfd
-
-
-
 // Enemies our player must avoid
-var Enemy = function(x, y, speed) {
+let Enemy = function(x, y, speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -36,10 +30,9 @@ Enemy.prototype.update = function(dt) {
 
 
 Enemy.prototype.checkCollision = function() {
-    // todo 6/4
     
-    // let object1 = player;
-    // let object2 = 'this enemy'
+    // object1 = player;
+    // object2 = 'this enemy'
     let enemyWidth = 80
     let enemyHeight = 60
     
@@ -48,7 +41,10 @@ Enemy.prototype.checkCollision = function() {
         && player.x + enemyWidth > this.x 
         && player.y < this.y + enemyHeight 
         && enemyHeight + player.y > this.y) {
-        player.resetPlayerPosition();
+            
+            lives -= 1;
+            setLives('.lives', lives)
+            player.resetPlayerPosition();    
     };
 
     /*
@@ -94,7 +90,11 @@ Player.prototype.render = function() {
 
 // Player handleInput()
 Player.prototype.handleInput = function(key1) {
-    console.log(key1)
+    // for debugging
+    if (!(key1 == undefined)) {
+        console.log(`key1: ${key1}`)    
+    }
+    
     
     if (key1 == 'left') {
         // this.x = (this.x - this.speed) % 450 // mod %, prevents value to go above 450
@@ -110,9 +110,14 @@ Player.prototype.handleInput = function(key1) {
         this.y = this.y - 83
         console.log(`x is ${this.x} and y is ${this.y}`)
         
-        // if (this.y < -25) {
-            // player.resetPlayerPosition(); // player go back to 'starting position'
-        // }
+        if (this.y < 0) {
+            scores+=1;
+            setScores('.scores', scores);
+            
+            player.resetPlayerPosition();
+        }    
+        
+        
     } else if (key1 == 'down') {
         this.y = this.y + 83
         console.log(`x is ${this.x} and y is ${this.y}`)
@@ -128,12 +133,12 @@ Player.prototype.handleInput = function(key1) {
         this.x = 400 
     }
     
-    // player's head to above the water 
-    // if (this.y < -50) {
-        // this.y = -50
-    // }
+    // player's head not above the water 
+    if (this.y <= -10) {
+        this.y = -10
+    }
     
-    // player standing in the green grass
+    // player's feet not below the green grass
     if (this.y > 400) {
         this.y = 400
     }
@@ -144,14 +149,52 @@ Player.prototype.handleInput = function(key1) {
 Player.prototype.resetPlayerPosition = function() {
     this.x = 202; // 'browser' x position
     this.y = 405; // 'browser' y position
+    
+    let modal1 = document.querySelector('.modal-background');
+    let scoreModal = document.querySelector('.final-score');
+    let playagain1 = document.querySelector('.button-reply');
+    let message1 = document.querySelector('.modal-message');
+    
+    if (lives == 0 && scores < 3) {
+        // activate 'Modal' here
+        modal1.style.display = 'block';
+        scoreModal.innerText = `${scores}`;
+        message1.innerText = `You Lose!`;
+        
+        // hide the 'modal' when you clicked the button
+        playagain1.addEventListener('click', function() {
+            console.log('Reset game')
+            modal1.style.display = 'none';
+            
+            resetGame();
+        });
+    
+    } else if (lives > 0 && scores == 3) {
+        
+        // show the 'modal'
+        modal1.style.display = 'block';
+        scoreModal.innerText = `${scores}`;
+        message1.innerText = `You Win!`;
+        
+        // hide the 'modal' when you clicked the button
+        playagain1.addEventListener('click', function() {
+            modal1.style.display = 'none';
+            
+            resetGame();
+        });
+    }
+    
 }
 
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+
+// **Game logic STARTS HERE!
+let player = new Player(202,405,50); // putting little dude on the screen
 let allEnemies=[];
-let player = new Player(0,0,50) // putting little dude on the screen
+let scores, lives;
 resetGame();
 
 
@@ -165,7 +208,6 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
     };
 
-
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
@@ -176,12 +218,51 @@ document.addEventListener('keyup', function(e) {
  * 
  * */
  
- function resetGame() {
-     player.resetPlayerPosition() // reset player's position
-     
-     // make new 'enemy' on the screen
-     allEnemies.push(
-         new Enemy(0, 63, Math.random()*200),
-         new Enemy(0, 147, Math.random()*300) // speed, higher is faster
+function resetGame() {
+    
+    allEnemies = [];
+    // console.log(`allEnemies array cleared`);
+    
+    // make new 'enemy' on the screen
+    allEnemies.push(
+         // 62 = 142(position of bottom bug) - 60(height of bug) - 10(for padding)
+         // player move up/down by 83
+         new Enemy(0, 64, Math.random() * 250),
+         new Enemy(0, 147, Math.random() * 300), 
+         new Enemy(0, 230, Math.random() * 400) // speed, higher is faster
         )
- }
+        
+    scores = 0;
+    lives = 2;    
+    
+    setScores('.scores', scores);
+    setLives('.lives', lives);
+}
+ 
+
+function setLives(input1, input2) {
+    let liveText = document.querySelector(input1);
+    liveText.innerText = `${input2}`
+}
+
+ 
+function setScores(input1, input2) {
+    let scoreText = document.querySelector(input1);
+    scoreText.innerText = `${input2}`;
+}
+ 
+ 
+ /**
+  * code for showing X,Y coordinates in Browser console
+  * 
+    let canvas_object = document.querySelector('canvas') 
+   
+    canvas_object.onmousemove = function(event) {
+    let x = event.clientX;
+    let y = event.clientY;
+    let coor = `${x} and ${y}` 
+    console.clear();
+    console.log(coor);
+    }
+    
+*/

@@ -6,6 +6,35 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    
+    
+    <h1>Run for the River!</h1>
+    
+    <div class="scoreDiv">
+        <p>Lives: <span class="lives">0</span> </p>
+        <p>Score: <span class="scores">0</span> </p>
+    </div>
+    
+    <!--The Modal-->
+    <div class="modal-background hide">
+        
+        <div class="modal-body">
+            <div class="modal-stats">
+                <h1 class="modal-message">Game Over</h1>
+
+                <h2> >>> Your Scores <<< </h2>
+                <div class="lives">
+                    <p><span class="score final-score">0</span></p>
+                </div>
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="modal-button button-reply">Replay?</button>
+            </div>    
+        </div>
+        
+    </div>
+    
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>

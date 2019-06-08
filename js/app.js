@@ -221,7 +221,6 @@ function resetGame() {
          new Enemy(0, 230, Math.random() * 400) // speed, higher is faster
     ];
     
-    
     // make new 'enemy' on the screen
     /*
     allEnemies.push(

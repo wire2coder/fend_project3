@@ -36,7 +36,7 @@ Enemy.prototype.checkCollision = function() {
     let enemyWidth = 80
     let enemyHeight = 60
     
-    
+    // 2D objects, collision detection algorithm
     if ( player.x < this.x + enemyWidth 
         && player.x + enemyWidth > this.x 
         && player.y < this.y + enemyHeight 
@@ -44,21 +44,10 @@ Enemy.prototype.checkCollision = function() {
             
             lives -= 1;
             setLives('.lives', lives)
-            player.resetPlayerPosition();    
+            player.resetPlayerPosition();
+            
     };
 
-    /*
-    2D, collision detection, http://blog.sklambert.com/html5-canvas-game-2d-collision-detection/#d-collision-detection    
-    
-        if (object1.x < object2.x + object2.width
-        && object1.x + object1.width  > object2.x
-        && object1.y < object2.y + object2.height
-        && object1.y + object1.height > object2.y) 
-            {
-                // The objects are touching, reset player's position
-            } 
-    */
-    
 }
 
 
@@ -90,37 +79,32 @@ Player.prototype.render = function() {
 
 // Player handleInput()
 Player.prototype.handleInput = function(key1) {
+    
     // for debugging
     if (!(key1 == undefined)) {
-        console.log(`key1: ${key1}`)    
     }
-    
     
     if (key1 == 'left') {
         // this.x = (this.x - this.speed) % 450 // mod %, prevents value to go above 450
         this.x = this.x - 102
-        console.log(`x is ${this.x} and y is ${this.y}`)
-        
+
     } else if (key1 == 'right') {
         // this.x = (this.x + this.speed) % 450
         this.x = this.x + 102
-        console.log(`x is ${this.x} and y is ${this.y}`)
-        
+
     } else if (key1 == 'up') {
         this.y = this.y - 83
-        console.log(`x is ${this.x} and y is ${this.y}`)
         
         if (this.y < 0) {
             scores+=1;
             setScores('.scores', scores);
             
-            player.resetPlayerPosition();
+            // player.resetPlayerPosition();
+            this.resetPlayerPosition();
         }    
-        
         
     } else if (key1 == 'down') {
         this.y = this.y + 83
-        console.log(`x is ${this.x} and y is ${this.y}`)
     }
     
     // 'canvas' size is x=505 y=606
@@ -154,6 +138,7 @@ Player.prototype.resetPlayerPosition = function() {
     let scoreModal = document.querySelector('.final-score');
     let playagain1 = document.querySelector('.button-reply');
     let message1 = document.querySelector('.modal-message');
+    let gameMessage1 = document.querySelector('.gameMessage1');
     
     if (lives == 0 && scores < 3) {
         // activate 'Modal' here
@@ -161,9 +146,15 @@ Player.prototype.resetPlayerPosition = function() {
         scoreModal.innerText = `${scores}`;
         message1.innerText = `You Lose!`;
         
+        if (scores == 0) {
+            gameMessage1.innerText = `Your Score`;
+        } else if (scores > 0) {
+            gameMessage1.innerText = `Your Scores`;
+        }
+        
         // hide the 'modal' when you clicked the button
         playagain1.addEventListener('click', function() {
-            console.log('Reset game')
+            // console.log('Reset game')
             modal1.style.display = 'none';
             
             resetGame();
@@ -220,10 +211,19 @@ document.addEventListener('keyup', function(e) {
  
 function resetGame() {
     
-    allEnemies = [];
     // console.log(`allEnemies array cleared`);
+    allEnemies = [];
+    
+    // making new Enemy objects.
+    allEnemies = [
+         new Enemy(0, 64, Math.random() * 250),
+         new Enemy(0, 147, Math.random() * 300), 
+         new Enemy(0, 230, Math.random() * 400) // speed, higher is faster
+    ];
+    
     
     // make new 'enemy' on the screen
+    /*
     allEnemies.push(
          // 62 = 142(position of bottom bug) - 60(height of bug) - 10(for padding)
          // player move up/down by 83
@@ -231,6 +231,7 @@ function resetGame() {
          new Enemy(0, 147, Math.random() * 300), 
          new Enemy(0, 230, Math.random() * 400) // speed, higher is faster
         )
+    */
         
     scores = 0;
     lives = 2;    
@@ -266,3 +267,4 @@ function setScores(input1, input2) {
     }
     
 */
+
